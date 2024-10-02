@@ -1,48 +1,37 @@
 name: Run go tests with coverage
 
 on:
-    push:
-        branches:
-            - Development
-    pull_request:
-        branches:
-            - LatestRelease
+  push:
+    branches:
+      - Development
+  pull_request:
+    branches:
+      - LatestRelease
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-            - name: Set up Go
-              uses: actions/setup-go@v3
-              with:
-                  go-version: '^1.23.0'
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '^1.23.0'
 
-            - name: Go mod tidy
-              run: |
-                  set -e
-                  go mod tidy
+      - name: Go mod tidy
+        run: |
+          set -e
+          go mod tidy
 
-            - name: Run tests with coverage
-              run: |
-                  set -e
-                  go test -coverprofile=coverage.out ./...
+      - name: Run tests
+        run: |
+          set -e
+          go test -v -cover ./...
 
-            - name: Run benchmarks
-              run: |
-                  set -e
-                  go test -bench=. ./...
-
-            - name: Generate coverage badge
-              run: |
-                  # Generate coverage percentage
-                  coverage=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
-                  
-                  # Generate badge image
-                  echo "<svg xmlns='http://www.w3.org/2000/svg' width='100' height='20'><rect width='100' height='20' fill='green'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='white'>Coverage: ${coverage}%</text></svg>" > coverage.svg
-
-            - name: Save badge
-              run: mv coverage.svg ./badge.svg
+      - name: Run benchmarks
+        run: |
+          set -e
+          go test -bench=. ./...
