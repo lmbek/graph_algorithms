@@ -1,4 +1,4 @@
-![Coverage Badge](./badge.svg)
+100.0% coverage
 
 # Graph Algorithms
 This repository contains graph algorithms made in golang by Lars M Bek and Ida M Jensen<br>
