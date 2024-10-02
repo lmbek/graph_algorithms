@@ -9,12 +9,10 @@ import (
 	"time"
 )
 
-type Path struct {
-	Vertices []vertex.Vertex
-}
+// TODO: OPTIMIZE WITH PRIORITY QUEUE
 
-// FindShortestPath finds the shortest path using Dijkstra's algorithm with a time complexity of O(n^2) in dense graphs.
-func FindShortestPath(graph graph.Graph, start vertex.Vertex, end vertex.Vertex) *Path {
+// FindShortestPathOptimized finds the shortest path using Dijkstra's algorithm with a time complexity of O(n^2) in dense graphs.
+func FindShortestPathOptimized(graph graph.Graph, start vertex.Vertex, end vertex.Vertex) *Path {
 
 	var queue = make(map[string]vertex.Vertex)
 
@@ -35,7 +33,7 @@ func FindShortestPath(graph graph.Graph, start vertex.Vertex, end vertex.Vertex)
 
 	for len(queue) != 0 {
 		// get the vertex with the smallest distance
-		u := smallestDistance(queue)
+		u := smallestDistanceOptimized(queue)
 
 		// if the smallest distance is infinite, no more reachable vertices
 		if math.IsInf(u.GetWeight().GetDistance(), 1) {
@@ -44,20 +42,20 @@ func FindShortestPath(graph graph.Graph, start vertex.Vertex, end vertex.Vertex)
 
 		// check if end has been reached
 		if u == end {
-			return reverseIteration(u, start)
+			return reverseIterationOptimized(u, start)
 		}
 
 		delete(queue, u.GetId())
 
-		neighbors := findNeighborsOfUInQ(graph, u, queue)
+		neighbors := findNeighborsOfUInQOptimized(graph, u, queue)
 
 		edges := graph.GetEdges()
 
 		for _, v := range neighbors {
 			var selectedEdge edge.Edge
-			for _, e := range edges {
-				if e.GetFrom() == u && e.GetTo() == v {
-					selectedEdge = e
+			for _, edge := range edges {
+				if edge.GetFrom() == u && edge.GetTo() == v {
+					selectedEdge = edge
 					break
 				}
 			}
@@ -78,10 +76,10 @@ func FindShortestPath(graph graph.Graph, start vertex.Vertex, end vertex.Vertex)
 	return nil
 }
 
-// reverseIteration builds the path from the end vertex back to the start by following each vertex's "previous" link.
+// reverseIterationOptimized builds the path from the end vertex back to the start by following each vertex's "previous" link.
 // It starts from the end and keeps going backward through the vertices, adding each one to the beginning of the list.
 // The result is the shortest path from start to end, or nil if no valid path exists.
-func reverseIteration(u vertex.Vertex, start vertex.Vertex) *Path {
+func reverseIterationOptimized(u vertex.Vertex, start vertex.Vertex) *Path {
 	var sequence []vertex.Vertex
 
 	if u.GetPrevious() != nil || u == start {
@@ -96,8 +94,8 @@ func reverseIteration(u vertex.Vertex, start vertex.Vertex) *Path {
 	return nil
 }
 
-// findNeighborsOfUInQ - finds the neighboring vertices of the given vertex u in the graph g, that are still in the queue q.
-func findNeighborsOfUInQ(g graph.Graph, u vertex.Vertex, q map[string]vertex.Vertex) []vertex.Vertex {
+// findNeighborsOfUInQOptimized - finds the neighboring vertices of the given vertex u in the graph g, that are still in the queue q.
+func findNeighborsOfUInQOptimized(g graph.Graph, u vertex.Vertex, q map[string]vertex.Vertex) []vertex.Vertex {
 	// list of edges connected to u
 	var edges []edge.Edge
 
@@ -122,8 +120,8 @@ func findNeighborsOfUInQ(g graph.Graph, u vertex.Vertex, q map[string]vertex.Ver
 	return neighbors
 }
 
-// smallestDistance - gets the vertex with the smallest distance from map
-func smallestDistance(queue map[string]vertex.Vertex) vertex.Vertex {
+// smallestDistanceOptimized - gets the vertex with the smallest distance from map
+func smallestDistanceOptimized(queue map[string]vertex.Vertex) vertex.Vertex {
 	var smallest = vertex.NewVertex("temp")
 
 	smallest.SetWeight(weight.NewWeight(math.Inf(1), time.Duration(math.Inf(1)), true))
