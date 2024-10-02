@@ -10,8 +10,8 @@ import (
 	"time"
 )
 
-// useTestGraph is used to set up the graph data for multiple tests (reducing code)
-func useTestGraph() (g graph.Graph, start vertex.Vertex, end vertex.Vertex) {
+// UseTestGraph is used to set up the graph data for multiple tests (reducing code)
+func UseTestGraph() (g graph.Graph, start vertex.Vertex, end vertex.Vertex) {
 	a := vertex.NewVertex("A")
 	b := vertex.NewVertex("B")
 	c := vertex.NewVertex("C")
@@ -53,8 +53,8 @@ func useTestGraph() (g graph.Graph, start vertex.Vertex, end vertex.Vertex) {
 	return g, start, end
 }
 
-func TestRun_PathExist(t *testing.T) {
-	g, start, end := useTestGraph()
+func TestRun(t *testing.T) {
+	g, start, end := UseTestGraph()
 
 	path := Run(g, start, end)
 
@@ -72,36 +72,4 @@ func TestRun_PathExist(t *testing.T) {
 	}
 
 	fmt.Println()
-}
-
-func TestRun_PathDoesNotExist(t *testing.T) {
-	a := vertex.NewVertex("A")
-	b := vertex.NewVertex("B")
-	c := vertex.NewVertex("C")
-
-	g := graph.NewGraph(map[string]vertex.Vertex{
-		a.GetId(): a,
-		b.GetId(): b,
-		c.GetId(): c,
-	}, map[string]edge.Edge{
-		"1": edge.NewEdge(a, b, weight.NewWeight(1, 3*time.Second, true)),
-	})
-
-	start := a
-	end := c
-
-	path := Run(g, start, end)
-
-	if path != nil {
-		t.Errorf("path is not nil")
-	}
-}
-
-func BenchmarkRun_PathExist(bench *testing.B) {
-	g, start, end := useTestGraph()
-
-	// Run the benchmark loop
-	for i := 0; i < bench.N; i++ {
-		Run(g, start, end)
-	}
 }

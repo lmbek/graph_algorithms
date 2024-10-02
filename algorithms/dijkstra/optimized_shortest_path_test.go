@@ -10,10 +10,10 @@ import (
 	"time"
 )
 
-func TestFindShortestPath_Exists(t *testing.T) {
+func TestFindShortestPathOptimized_Exists(t *testing.T) {
 	g, start, end := UseTestGraph()
 
-	path := FindShortestPath(g, start, end)
+	path := FindShortestPathOptimized(g, start, end)
 
 	if path == nil {
 		t.Errorf("path is nil")
@@ -31,7 +31,7 @@ func TestFindShortestPath_Exists(t *testing.T) {
 	fmt.Println()
 }
 
-func TestFindShortestPath_DoesNotExist(t *testing.T) {
+func TestFindShortestPathOptimized_DoesNotExist(t *testing.T) {
 	a := vertex.NewVertex("A")
 	b := vertex.NewVertex("B")
 	c := vertex.NewVertex("C")
@@ -47,27 +47,27 @@ func TestFindShortestPath_DoesNotExist(t *testing.T) {
 	start := a
 	end := c
 
-	path := FindShortestPath(g, start, end)
+	path := FindShortestPathOptimized(g, start, end)
 
 	if path != nil {
 		t.Errorf("path is not nil")
 	}
 }
 
-func BenchmarkFindShortestPath_PathExist(bench *testing.B) {
+func BenchmarkFindShortestPathOptimized_PathExist(bench *testing.B) {
 	g, start, end := UseTestGraph()
 
 	// Benchmark the FindShortestPath
 	for i := 0; i < bench.N; i++ {
-		FindShortestPath(g, start, end)
+		FindShortestPathOptimized(g, start, end)
 	}
 }
 
-func TestReverseIteration(t *testing.T) {
+func TestReverseIterationOptimized(t *testing.T) {
 	a := vertex.NewVertex("A")
 	b := vertex.NewVertex("B")
 
-	path := reverseIteration(b, a)
+	path := reverseIterationOptimized(b, a)
 
 	if path != nil {
 		t.Errorf("path is nil")
