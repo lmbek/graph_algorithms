@@ -1,13 +1,11 @@
 package graph
 
 import (
-	"graph_algorithms/graph/edge"
-	"graph_algorithms/graph/vertex"
+	"graph/edge"
+	"graph/vertex"
 )
 
 type Graph interface {
-	AddVertex(vertex vertex.Vertex) vertex.Vertex
-	AddEdge(id string, edge edge.Edge) edge.Edge
 	GetVerticesCount() int
 	GetEdgesCount() int
 	GetVertices() map[string]vertex.Vertex
@@ -20,20 +18,7 @@ type graph struct {
 }
 
 func NewGraph(vertices map[string]vertex.Vertex, edges map[string]edge.Edge) Graph {
-	//g.vertices = make(map[string]vertex.Vertex)
-	//g.edges = make(map[string]edge.Edge)
-	g := graph{vertices: vertices, edges: edges}
-	return &g
-}
-
-func (g *graph) AddVertex(vertex vertex.Vertex) vertex.Vertex {
-	g.vertices[vertex.GetId()] = vertex
-	return vertex
-}
-
-func (g *graph) AddEdge(id string, edge edge.Edge) edge.Edge {
-	g.edges[id] = edge
-	return edge
+	return &graph{vertices: vertices, edges: edges}
 }
 
 func (g *graph) GetVerticesCount() int {

@@ -1,7 +1,7 @@
 package vertex
 
 import (
-	"graph_algorithms/graph/weight"
+	"graph/weight"
 	"testing"
 	"time"
 )

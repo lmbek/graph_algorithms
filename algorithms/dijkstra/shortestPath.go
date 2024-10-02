@@ -1,10 +1,10 @@
 package dijkstra
 
 import (
-	"graph_algorithms/graph"
-	"graph_algorithms/graph/edge"
-	"graph_algorithms/graph/vertex"
-	"graph_algorithms/graph/weight"
+	"graph"
+	"graph/edge"
+	"graph/vertex"
+	"graph/weight"
 	"math"
 	"time"
 )
@@ -13,8 +13,7 @@ type Path struct {
 	Vertices []vertex.Vertex
 }
 
-// Run takes in a graph, with a specified start and end Vertex
-func Run(graph graph.Graph, start vertex.Vertex, end vertex.Vertex) *Path {
+func FindShortestPath(graph graph.Graph, start vertex.Vertex, end vertex.Vertex) *Path {
 
 	var queue = make(map[string]vertex.Vertex)
 
@@ -76,19 +75,22 @@ func Run(graph graph.Graph, start vertex.Vertex, end vertex.Vertex) *Path {
 	return nil
 }
 
-// smallestDistance - gets the vertex with the smallest distance from map
-func smallestDistance(queue map[string]vertex.Vertex) vertex.Vertex {
-	var smallest = vertex.NewVertex("temp")
+// reverseIteration builds the path from the end vertex back to the start by following each vertex's "previous" link.
+// It starts from the end and keeps going backward through the vertices, adding each one to the beginning of the list.
+// The result is the shortest path from start to end, or nil if no valid path exists.
+func reverseIteration(u vertex.Vertex, start vertex.Vertex) *Path {
+	var sequence []vertex.Vertex
 
-	smallest.SetWeight(weight.NewWeight(math.Inf(1), time.Duration(math.Inf(1)), true))
-
-	for _, v := range queue {
-		if v.GetWeight().CompareWithWeight(smallest.GetWeight()) {
-			smallest = v
+	if u.GetPrevious() != nil || u == start {
+		for u != nil {
+			// prepend to sequence
+			sequence = append([]vertex.Vertex{u}, sequence...)
+			u = u.GetPrevious()
 		}
+		return &Path{sequence}
 	}
 
-	return smallest
+	return nil
 }
 
 // findNeighborsOfUInQ - finds the neighboring vertices of the given vertex u in the graph g, that are still in the queue q.
@@ -117,20 +119,17 @@ func findNeighborsOfUInQ(g graph.Graph, u vertex.Vertex, q map[string]vertex.Ver
 	return neighbors
 }
 
-// reverseIteration builds the path from the end vertex back to the start by following each vertex's "previous" link.
-// It starts from the end and keeps going backward through the vertices, adding each one to the beginning of the list.
-// The result is the shortest path from start to end, or nil if no valid path exists.
-func reverseIteration(u vertex.Vertex, start vertex.Vertex) *Path {
-	var sequence []vertex.Vertex
+// smallestDistance - gets the vertex with the smallest distance from map
+func smallestDistance(queue map[string]vertex.Vertex) vertex.Vertex {
+	var smallest = vertex.NewVertex("temp")
 
-	if u.GetPrevious() != nil || u == start {
-		for u != nil {
-			// prepend to sequence
-			sequence = append([]vertex.Vertex{u}, sequence...)
-			u = u.GetPrevious()
+	smallest.SetWeight(weight.NewWeight(math.Inf(1), time.Duration(math.Inf(1)), true))
+
+	for _, v := range queue {
+		if v.GetWeight().CompareWithWeight(smallest.GetWeight()) {
+			smallest = v
 		}
-		return &Path{sequence}
 	}
 
-	return nil
+	return smallest
 }

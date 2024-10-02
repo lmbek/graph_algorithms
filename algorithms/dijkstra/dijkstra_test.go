@@ -1,22 +1,17 @@
-package main
+package dijkstra
 
 import (
-	"bufio"
 	"fmt"
+	"graph"
 	"graph/edge"
 	"graph/vertex"
 	"graph/weight"
-	"graph_algorithms/algorithms/dijkstra"
-	"graph_algorithms/graph"
-	"os"
+	"testing"
 	"time"
 )
 
-func main() {
-	run()
-}
-
-func run() {
+// useTestGraph is used to set up the graph data for multiple tests (reducing code)
+func useTestGraph() (g graph.Graph, start vertex.Vertex, end vertex.Vertex) {
 	a := vertex.NewVertex("A")
 	b := vertex.NewVertex("B")
 	c := vertex.NewVertex("C")
@@ -24,10 +19,10 @@ func run() {
 	e := vertex.NewVertex("E")
 	f := vertex.NewVertex("F")
 
-	start := a
-	end := f
+	start = a
+	end = f
 
-	g := graph.NewGraph(map[string]vertex.Vertex{
+	g = graph.NewGraph(map[string]vertex.Vertex{
 		a.GetId(): a,
 		b.GetId(): b,
 		c.GetId(): c,
@@ -55,19 +50,58 @@ func run() {
 		"18": edge.NewEdge(f, e, weight.NewWeight(6, 67*time.Second, true)),
 	})
 
-	path := dijkstra.Run(g, start, end)
+	return g, start, end
+}
 
-	for _, vertex := range path.Vertices {
-		if vertex == end {
-			fmt.Print(vertex.GetId())
+func TestRun_PathExist(t *testing.T) {
+	g, start, end := useTestGraph()
+
+	path := Run(g, start, end)
+
+	if path == nil {
+		t.Errorf("path is nil")
+		return
+	}
+
+	for _, v := range path.Vertices {
+		if v == end {
+			fmt.Print(v.GetId())
 			break
 		}
-		fmt.Print(vertex.GetId(), "->")
+		fmt.Print(v.GetId(), "->")
 	}
 
 	fmt.Println()
+}
 
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Press any key to close")
-	_, _ = reader.ReadString('\n')
+func TestRun_PathDoesNotExist(t *testing.T) {
+	a := vertex.NewVertex("A")
+	b := vertex.NewVertex("B")
+	c := vertex.NewVertex("C")
+
+	g := graph.NewGraph(map[string]vertex.Vertex{
+		a.GetId(): a,
+		b.GetId(): b,
+		c.GetId(): c,
+	}, map[string]edge.Edge{
+		"1": edge.NewEdge(a, b, weight.NewWeight(1, 3*time.Second, true)),
+	})
+
+	start := a
+	end := c
+
+	path := Run(g, start, end)
+
+	if path != nil {
+		t.Errorf("path is not nil")
+	}
+}
+
+func BenchmarkRun_PathExist(bench *testing.B) {
+	g, start, end := useTestGraph()
+
+	// Run the benchmark loop
+	for i := 0; i < bench.N; i++ {
+		Run(g, start, end)
+	}
 }

@@ -1,37 +1,36 @@
-package dijkstra
+package graph_test
 
 import (
-	"fmt"
-	"graph_algorithms/graph"
-	"graph_algorithms/graph/edge"
-	"graph_algorithms/graph/vertex"
-	"graph_algorithms/graph/weight"
+	"graph"
+	"graph/edge"
+	"graph/vertex"
+	"graph/weight"
 	"testing"
 	"time"
 )
 
-func TestRun_PathExist(t *testing.T) {
-	g, start, end := useTestGraph()
+func TestGraph_GetVertices(t *testing.T) {
+	a := vertex.NewVertex("A")
+	b := vertex.NewVertex("B")
+	c := vertex.NewVertex("C")
 
-	path := Run(g, start, end)
+	g := graph.NewGraph(map[string]vertex.Vertex{
+		a.GetId(): a,
+		b.GetId(): b,
+		c.GetId(): c,
+	}, nil)
 
-	if path == nil {
-		t.Errorf("path is nil")
-		return
+	if g.GetVertices() == nil {
+		t.Errorf("vertices is nil")
 	}
 
-	for _, vertex := range path.Vertices {
-		if vertex == end {
-			fmt.Print(vertex.GetId())
-			break
-		}
-		fmt.Print(vertex.GetId(), "->")
+	if g.GetVerticesCount() != 3 {
+		t.Errorf("vertices is not 3")
 	}
 
-	fmt.Println()
 }
 
-func TestRun_PathDoesNotExist(t *testing.T) {
+func TestGraph_GetEdges(t *testing.T) {
 	a := vertex.NewVertex("A")
 	b := vertex.NewVertex("B")
 	c := vertex.NewVertex("C")
@@ -41,41 +40,24 @@ func TestRun_PathDoesNotExist(t *testing.T) {
 		b.GetId(): b,
 		c.GetId(): c,
 	}, map[string]edge.Edge{
-		"1": edge.NewEdge(a, b, weight.NewWeight(1, 3*time.Second, true)),
+		"1": edge.NewEdge(a, b, weight.NewWeight(4, 3*time.Second, true)),
+		"2": edge.NewEdge(a, c, weight.NewWeight(5, 42*time.Second, true)),
+		"3": edge.NewEdge(b, a, weight.NewWeight(4, 42*time.Second, true)),
+		"4": edge.NewEdge(b, c, weight.NewWeight(11, 42*time.Second, true)),
+		"5": edge.NewEdge(c, a, weight.NewWeight(5, 30*time.Second, true)),
+		"6": edge.NewEdge(c, b, weight.NewWeight(11, 13*time.Second, true)),
 	})
 
-	start := a
-	end := c
+	if g.GetEdges() == nil {
+		t.Errorf("edges is nil")
+	}
 
-	path := Run(g, start, end)
-
-	if path != nil {
-		t.Errorf("path is not nil")
+	if g.GetEdgesCount() != 6 {
+		t.Errorf("edges is not 6")
 	}
 }
 
-func TestReverseIteration(t *testing.T) {
-	a := vertex.NewVertex("A")
-	b := vertex.NewVertex("B")
-
-	path := reverseIteration(b, a)
-
-	if path != nil {
-		t.Errorf("path is nil")
-	}
-}
-
-func BenchmarkRun_PathExist(bench *testing.B) {
-	g, start, end := useTestGraph()
-
-	// Run the benchmark loop
-	for i := 0; i < bench.N; i++ {
-		Run(g, start, end)
-	}
-}
-
-// useTestGraph is used to set up the graph data for multiple tests (reducing code)
-func useTestGraph() (g graph.Graph, start vertex.Vertex, end vertex.Vertex) {
+func TestNewGraph(t *testing.T) {
 	a := vertex.NewVertex("A")
 	b := vertex.NewVertex("B")
 	c := vertex.NewVertex("C")
@@ -83,10 +65,7 @@ func useTestGraph() (g graph.Graph, start vertex.Vertex, end vertex.Vertex) {
 	e := vertex.NewVertex("E")
 	f := vertex.NewVertex("F")
 
-	start = a
-	end = f
-
-	g = graph.NewGraph(map[string]vertex.Vertex{
+	g := graph.NewGraph(map[string]vertex.Vertex{
 		a.GetId(): a,
 		b.GetId(): b,
 		c.GetId(): c,
@@ -114,5 +93,11 @@ func useTestGraph() (g graph.Graph, start vertex.Vertex, end vertex.Vertex) {
 		"18": edge.NewEdge(f, e, weight.NewWeight(6, 67*time.Second, true)),
 	})
 
-	return g, start, end
+	if g.GetVerticesCount() != 6 {
+		t.Errorf("vertices is not 6")
+	}
+
+	if g.GetEdgesCount() != 18 {
+		t.Errorf("edges is not 18")
+	}
 }

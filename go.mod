@@ -1,3 +1,3 @@
-module graph_algorithms
+module graph
 
 go 1.23.0

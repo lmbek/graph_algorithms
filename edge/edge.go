@@ -1,8 +1,8 @@
 package edge
 
 import (
-	"graph_algorithms/graph/vertex"
-	"graph_algorithms/graph/weight"
+	"graph/vertex"
+	"graph/weight"
 )
 
 type Edge interface {
