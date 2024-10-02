@@ -1,3 +1,5 @@
+![Coverage Badge](./badge.svg)
+
 # Graph Algorithms
 This repository contains graph algorithms made in golang by Lars M Bek and Ida M Jensen<br>
 
