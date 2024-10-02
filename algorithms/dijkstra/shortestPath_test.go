@@ -54,15 +54,6 @@ func TestFindShortestPath_DoesNotExist(t *testing.T) {
 	}
 }
 
-func BenchmarkFindShortestPath_PathExist(bench *testing.B) {
-	g, start, end := UseTestGraph()
-
-	// Benchmark the FindShortestPath
-	for i := 0; i < bench.N; i++ {
-		FindShortestPath(g, start, end)
-	}
-}
-
 func TestReverseIteration(t *testing.T) {
 	a := vertex.NewVertex("A")
 	b := vertex.NewVertex("B")
@@ -71,5 +62,14 @@ func TestReverseIteration(t *testing.T) {
 
 	if path != nil {
 		t.Errorf("path is nil")
+	}
+}
+
+func BenchmarkFindShortestPath_PathExist(bench *testing.B) {
+	g, start, end := UseTestGraph()
+
+	// Benchmark the FindShortestPath
+	for i := 0; i < bench.N; i++ {
+		FindShortestPath(g, start, end)
 	}
 }

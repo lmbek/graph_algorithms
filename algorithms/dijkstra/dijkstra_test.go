@@ -73,3 +73,12 @@ func TestRun(t *testing.T) {
 
 	fmt.Println()
 }
+
+func BenchmarkRun_PathExist(bench *testing.B) {
+	g, start, end := UseTestGraph()
+
+	// Benchmark the FindShortestPath
+	for i := 0; i < bench.N; i++ {
+		Run(g, start, end)
+	}
+}
