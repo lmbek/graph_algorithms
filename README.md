@@ -8,17 +8,17 @@ There is main.go's multiple places in the repository, one for each graph algorit
 ## Information about this project
 In this project we will develop both abstracted graph algorithms and concrete (implemented cases) for graph algorithms. <br>
 
-###The repository contains the following algorthms:<br>
+### The repository contains the following algorthms<br>
 * Dijkstra (currently only n^2 time complexity version)
 
-###
-Future plans:
+### Future plans
+We are looking into added the following:
 * Dijkstra will get its priority queue (algorithm will become around n*log(n) time complexity , and a few optimizations will be added
 * Weights will be able to compare with multiple variables, so that variables such as distance, time, openDoors etc. Will all be able to get a biased weight, so it can put percentage importance on each of them.
 * AStar will be implemented
 * Other graph algorithms (such as flow algorithms - Maximum flow problem) will be added 
 
-###Information about the code:<br>
+### Information about the code:<br>
 * The code's test coverage is 100%
 * The code style is interface driven
   * The Go code follows an interface-driven design, where interfaces define behavior and decouple implementations, promoting flexibility, testability, and modularity. This approach ensures that dependencies are injected via interfaces, enabling easy swapping of implementations for testing or future scalability.
